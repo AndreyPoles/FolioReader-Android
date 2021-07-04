@@ -1,6 +1,7 @@
 package com.folioreader;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +15,7 @@ import com.folioreader.model.locators.ReadLocator;
 import com.folioreader.model.sqlite.DbAdapter;
 import com.folioreader.network.QualifiedTypeConverterFactory;
 import com.folioreader.network.R2StreamerApi;
+import com.folioreader.ui.activity.CustomActivity;
 import com.folioreader.ui.activity.FolioActivity;
 import com.folioreader.ui.base.OnSaveHighlight;
 import com.folioreader.ui.base.SaveReceivedHighlightTask;
@@ -134,8 +136,8 @@ public class FolioReader {
         context.startActivity(intent);
         return singleton;
     }
-    
-        public FolioReader openBook(String assetOrSdcardPath, Activity activity) {
+
+    public FolioReader openBook(String assetOrSdcardPath, Activity activity) {
         Intent intent = getIntentCustomActivityFromUrl(assetOrSdcardPath, 0, activity);
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
@@ -187,10 +189,11 @@ public class FolioReader {
 
         return intent;
     }
-    
-        private Intent getIntentCustomActivityFromUrl(String assetOrSdcardPath, int rawId, Activity activity) {
+
+    private Intent getIntentCustomActivityFromUrl(String assetOrSdcardPath, int rawId, Activity activity) {
 
         Intent intent = new Intent(context, activity.getClass());
+//        Intent intent = new Intent(context, FolioActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra(Config.INTENT_CONFIG, config);
         intent.putExtra(Config.EXTRA_OVERRIDE_CONFIG, overrideConfig);
@@ -213,6 +216,8 @@ public class FolioReader {
 
         return intent;
     }
+
+
 
 
     /**
