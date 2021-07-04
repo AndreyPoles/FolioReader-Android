@@ -134,6 +134,13 @@ public class FolioReader {
         context.startActivity(intent);
         return singleton;
     }
+    
+        public FolioReader openBook(String assetOrSdcardPath, Activity activity) {
+        Intent intent = getIntentCustomActivityFromUrl(assetOrSdcardPath, 0, activity);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(intent);
+        return singleton;
+    }
 
     public FolioReader openBook(int rawId) {
         Intent intent = getIntentFromUrl(null, rawId);
@@ -180,6 +187,33 @@ public class FolioReader {
 
         return intent;
     }
+    
+        private Intent getIntentCustomActivityFromUrl(String assetOrSdcardPath, int rawId, Activity activity) {
+
+        Intent intent = new Intent(context, activity.getClass());
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra(Config.INTENT_CONFIG, config);
+        intent.putExtra(Config.EXTRA_OVERRIDE_CONFIG, overrideConfig);
+        intent.putExtra(EXTRA_PORT_NUMBER, portNumber);
+        intent.putExtra(FolioActivity.EXTRA_READ_LOCATOR, (Parcelable) readLocator);
+
+        if (rawId != 0) {
+            intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, rawId);
+            intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE,
+                    FolioActivity.EpubSourceType.RAW);
+        } else if (assetOrSdcardPath.contains(Constants.ASSET)) {
+            intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, assetOrSdcardPath);
+            intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE,
+                    FolioActivity.EpubSourceType.ASSETS);
+        } else {
+            intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_PATH, assetOrSdcardPath);
+            intent.putExtra(FolioActivity.INTENT_EPUB_SOURCE_TYPE,
+                    FolioActivity.EpubSourceType.SD_CARD);
+        }
+
+        return intent;
+    }
+
 
     /**
      * Pass your configuration and choose to override it every time or just for first execution.
